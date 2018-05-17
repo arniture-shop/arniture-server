@@ -58,5 +58,14 @@ module.exports = {
         item
       })
     })
+  },
+  checkout: function (req, res) {
+    Cart.findOneAndUpdate({_id: req.params._id}, {$set: {isCheckout: true}})
+    .then(data => {
+      res.status(201).json({
+        message: 'Checkout',
+        data
+      })
+    })
   }
 }

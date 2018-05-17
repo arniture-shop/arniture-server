@@ -11,7 +11,11 @@ const cartSchema = new Schema({
     ref: 'Item'
   },
   quantity: Number,
-  totalPrice: Number
+  totalPrice: Number,
+  isCheckout: {
+    type: Boolean,
+    default: false
+  }
 })
 
 const Cart = mongoose.model('Cart', cartSchema)
