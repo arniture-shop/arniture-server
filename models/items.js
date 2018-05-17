@@ -9,6 +9,10 @@ let itemSchema = mongoose.Schema({
     type: Number,
     require: true
   },
+  img: {
+    type: String,
+    require: true
+  },
   item_obj: {
     type: String,
     required: true,

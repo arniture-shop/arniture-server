@@ -5,6 +5,7 @@ module.exports = {
     let item = new Item()
     item.name = req.body.name
     item.price = req.body.price
+    item.img = req.body.img
     item.item_obj = req.body.item_obj
     item.item_mtl = req.body.item_mtl
     item.save()
