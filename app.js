@@ -14,6 +14,8 @@ mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds14
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')
+const itemsRouter = require('./routes/items')
+const cartRouter = require('./routes/cart')
 
 const app = express();
 
@@ -37,6 +39,8 @@ db.once('open', function() {
 
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
+app.use('/items', itemsRouter)
+app.use('/cart', cartRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
