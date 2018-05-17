@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken')
 function validateUsername (uInput,callback) {
   let result = false
   user.find({
-      username: uInput
+      email: uInput
   }).exec()
   .then(function (isFound) {
       if (isFound.length === 0) {
@@ -71,7 +71,7 @@ module.exports = {
         }
       } else {
         res.status(400).json({
-          message: 'username is not found'
+          message: 'email is not found'
         })
       }
     })
@@ -79,6 +79,14 @@ module.exports = {
       res.status(500).json({
         err:err,
         message: "fail to sign user in"
+      })
+    })
+  },
+  removeUser: function (req, res) {
+    user.remove({email: req.params.email})
+    .then(() => {
+      res.status(200).json({
+        message: 'user removed'
       })
     })
   }
