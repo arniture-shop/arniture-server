@@ -51,7 +51,7 @@ module.exports = {
   },
   signIn: function (req, res) {
     user.findOne({
-      username: req.body.username
+      email: req.body.email
   }).exec()
     .then(function (user) {
       if (user) {
