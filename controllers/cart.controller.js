@@ -52,10 +52,10 @@ module.exports = {
     Cart.find({userId: decoded.id})
     .populate('itemId')
     .exec()
-    .then(item => {
+    .then(cart => {
       res.status(200).json({
         message: 'Cart',
-        item
+        cart
       })
     })
   },
@@ -65,6 +65,14 @@ module.exports = {
       res.status(201).json({
         message: 'Checkout',
         data
+      })
+    })
+  },
+  clear: function (req, res) {
+    Cart.remove({_id: req.params._id})
+    .then(data => {
+      res.status(200).json({
+        message: 'Clear cart'
       })
     })
   }
