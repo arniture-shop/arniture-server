@@ -54,7 +54,8 @@ describe('Items', () => {
       price: 1000,
       img: 'Image test',
       item_obj: 'test.obj',
-      item_mtl: 'test.mtl'
+      item_mtl: 'test.mtl,test.jpg',
+      scale: '1,1,1'
     })
     .end((err, res) => {
       expect(res).to.have.status(201)
@@ -64,7 +65,8 @@ describe('Items', () => {
       expect(res.body.data).to.ownProperty('price').to.be.a('number').to.equal(1000)
       expect(res.body.data).to.ownProperty('img').to.be.a('string').to.equal('Image test')
       expect(res.body.data).to.ownProperty('item_obj').to.be.a('string').to.equal('test.obj')
-      expect(res.body.data).to.ownProperty('item_mtl').to.be.a('string').to.equal('test.mtl')
+      expect(res.body.data).to.ownProperty('item_mtl').to.be.a('array').to.equal([ 'test.mtl', 'test.jpg' ])
+      expect(res.body.data).to.ownProperty('scale').to.be.a('array').to.equal([1, 1, 1])
       done()
     })
   })
@@ -92,7 +94,8 @@ describe('Items', () => {
         expect(res.body.item).to.ownProperty('price').to.be.a('number').to.equal(1000)
         expect(res.body.item).to.ownProperty('img').to.be.a('string').to.equal('Image test')
         expect(res.body.item).to.ownProperty('item_obj').to.be.a('string').to.equal('test.obj')
-        expect(res.body.item).to.ownProperty('item_mtl').to.be.a('string').to.equal('test.mtl')
+        expect(res.body.data).to.ownProperty('item_mtl').to.be.a('array').to.equal(['test.mtl', 'test.jpg'])
+        expect(res.body.data).to.ownProperty('scale').to.be.a('array').to.equal([1, 1, 1])
         done()
       })
     })
@@ -108,8 +111,7 @@ describe('Items', () => {
         name: 'Test update',
         price: 2000,
         img: 'Image test update',
-        item_obj: 'testupdate.obj',
-        item_mtl: 'testupdate.mtl'
+        item_obj: 'testupdate.obj'
       })
       .end((er, re) => {
         expect(re).to.have.status(200)
@@ -123,7 +125,6 @@ describe('Items', () => {
           expect(res.body.item).to.ownProperty('price').to.be.a('number').to.equal(2000)
           expect(res.body.item).to.ownProperty('img').to.be.a('string').to.equal('Image test update')
           expect(res.body.item).to.ownProperty('item_obj').to.be.a('string').to.equal('testupdate.obj')
-          expect(res.body.item).to.ownProperty('item_mtl').to.be.a('string').to.equal('testupdate.mtl')
           done()
         })
       })

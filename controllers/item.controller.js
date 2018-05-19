@@ -7,7 +7,12 @@ module.exports = {
     item.price = req.body.price
     item.img = req.body.img
     item.item_obj = req.body.item_obj
-    item.item_mtl = req.body.item_mtl
+    item.item_mtl = req.body.item_mtl.split(',')
+    item.scale = []
+    let scale = req.body.scale.split(',')
+    scale.forEach(num => {
+      item.scale.push(+num)
+    })
     item.save()
     .then(data => {
       res.status(201).json({
