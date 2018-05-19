@@ -18,8 +18,12 @@ let itemSchema = mongoose.Schema({
     required: true,
   },
   item_mtl: {
-    type: String,
+    type: Array,
     required: true,
+  },
+  scale: {
+    type: Array,
+    required: true
   }
 },{
   timestamps: true
