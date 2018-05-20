@@ -95,5 +95,72 @@ module.exports = {
         message: 'Clear cart'
       })
     })
+  },
+  increaseQuantity : function (req, res) {
+    Cart.findById(req.params.id)
+    .populate('itemId')
+    .exec()
+      .then(function (cart) {
+        let updatedPrice = cart.totalPrice / cart.quantity * (cart.quantity + 1)
+        cart.update({
+          $inc: {
+            quantity: +1
+          },
+          $set: {
+            totalPrice: updatedPrice
+          }         
+        })
+          .then(function (response) {
+            res.status(200).json({
+              message: 'quantity is increment by 1'
+            })
+          })
+          .catch(function (err) {
+            res.status(500).json({
+              message: 'fail to increase quantity',
+              err
+            })
+          })
+      })
+      .catch(function (err) {
+        res.status(500).json({
+          message: 'fail to increase quantity',
+          err
+        })
+      })
+  },
+
+  decreaseQuantity: function (req, res) {
+    Cart.findById(req.params.id)
+    .populate('itemId')
+    .exec()
+      .then(function (cart) {
+        let updatedPrice = cart.totalPrice / cart.quantity * (cart.quantity - 1)
+        cart.update({
+          $inc: {
+            quantity: -1
+          },
+          $set: {
+            totalPrice: updatedPrice
+          }         
+        })
+          .then(function (response) {
+            res.status(200).json({
+              message: 'quantity is decrement by 1'
+            })
+          })
+          .catch(function (err) {
+            res.status(500).json({
+              message: 'fail to decrement by 1',
+              err
+            })
+          })
+      })
+      .catch(function (err) {
+        res.status(500).json({
+          message: 'fail to decrement by 1', 
+          err
+        })
+      })
   }
 }
