@@ -4,9 +4,10 @@ module.exports = {
   create: function (req, res) {
     let item = new Item()
     item.name = req.body.name
+    item.description = req.body.description
     item.price = req.body.price
     item.img = req.body.img
-    item.item_obj = req.body.item_obj
+    item.item_obj = req.body.item_obj,
     item.item_mtl = req.body.item_mtl.split(',')
     item.scale = []
     let scale = req.body.scale.split(',')
