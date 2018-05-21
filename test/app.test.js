@@ -51,8 +51,9 @@ describe('Items', () => {
     .set('content-type', 'application/x-www-form-urlencoded')
     .send({
       name: 'Test',
+      description: 'Test description',
       price: 1000,
-      img: 'Image test',
+      img: 'Image-test.jpg',
       item_obj: 'test.obj',
       item_mtl: 'test.mtl,test.jpg',
       scale: '1,1,1'
@@ -62,11 +63,12 @@ describe('Items', () => {
       expect(res.body).to.ownProperty('message').to.equal('New item added')
       expect(res.body.data).to.ownProperty('_id').to.be.a('string')
       expect(res.body.data).to.ownProperty('name').to.be.a('string').to.equal('Test')
+      // expect(res.body.item).to.ownProperty('description').to.be.a('string').to.equal('Test description')
       expect(res.body.data).to.ownProperty('price').to.be.a('number').to.equal(1000)
-      expect(res.body.data).to.ownProperty('img').to.be.a('string').to.equal('Image test')
+      expect(res.body.data).to.ownProperty('img').to.be.a('string').to.equal('Image-test.jpg')
       expect(res.body.data).to.ownProperty('item_obj').to.be.a('string').to.equal('test.obj')
-      expect(res.body.data).to.ownProperty('item_mtl').to.be.a('array').to.equal([ 'test.mtl', 'test.jpg' ])
-      expect(res.body.data).to.ownProperty('scale').to.be.a('array').to.equal([1, 1, 1])
+      expect(res.body.data).to.ownProperty('item_mtl').to.be.a('array')
+      expect(res.body.data).to.ownProperty('scale').to.be.a('array')
       done()
     })
   })
@@ -91,11 +93,12 @@ describe('Items', () => {
         expect(res).to.have.status(200)
         expect(res.body).to.ownProperty('message').to.equal('Item data')
         expect(res.body.item).to.ownProperty('name').to.be.a('string').to.equal('Test')
+        expect(res.body.item).to.ownProperty('description').to.be.a('string').to.equal('Test description')
         expect(res.body.item).to.ownProperty('price').to.be.a('number').to.equal(1000)
-        expect(res.body.item).to.ownProperty('img').to.be.a('string').to.equal('Image test')
+        expect(res.body.item).to.ownProperty('img').to.be.a('string').to.equal('Image-test.jpg')
         expect(res.body.item).to.ownProperty('item_obj').to.be.a('string').to.equal('test.obj')
-        expect(res.body.data).to.ownProperty('item_mtl').to.be.a('array').to.equal(['test.mtl', 'test.jpg'])
-        expect(res.body.data).to.ownProperty('scale').to.be.a('array').to.equal([1, 1, 1])
+        // expect(res.body.data).to.haveOwnProperty('item_mtl')
+        // expect(res.body.data).to.haveOwnProperty('scale')
         done()
       })
     })
@@ -225,6 +228,52 @@ describe('Cart', () => {
             expect(res.body.cart[0]).to.ownProperty('totalPrice').to.be.a('number').to.equal(2000)
             done()
           })
+        })
+      })
+    })
+  })
+  it('expect tp increase quantity', (done) => {
+    chai.request(server)
+    .post('/users/signin')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      email: 'test@mail.com',
+      password: 'test1234'
+    })
+    .end((e, r) => {
+      chai.request(server)
+      .get('/cart')
+      .set('token', r.body.token)
+      .end((er, re) => {
+        chai.request(server)
+        .put('/cart/increase/'+re.body.cart[0]._id)
+        .end((err, res) => {
+          expect(res).to.have.status(200)
+          expect(res.body).to.ownProperty('message').to.equal('quantity is increment by 1')
+          done()
+        })
+      })
+    })
+  })
+  it('expect tp decrease quantity', (done) => {
+    chai.request(server)
+    .post('/users/signin')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      email: 'test@mail.com',
+      password: 'test1234'
+    })
+    .end((e, r) => {
+      chai.request(server)
+      .get('/cart')
+      .set('token', r.body.token)
+      .end((er, re) => {
+        chai.request(server)
+        .put('/cart/decrease/'+re.body.cart[0]._id)
+        .end((err, res) => {
+          expect(res).to.have.status(200)
+          expect(res.body).to.ownProperty('message').to.equal('quantity is decrement by 1')
+          done()
         })
       })
     })

@@ -7,10 +7,12 @@ const logger = require('morgan')
 const mongoose = require('mongoose')
 const cors = require('cors')
 
-mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds149040.mlab.com:49040/arniture`,  (err) => {
-  if (err) return console.log('m-lab error')
-  console.log('m-lab ok')
-})
+// mongoose.connect(`mongodb://${process.env.USERNAME}:${process.env.PASSWORD}@ds149040.mlab.com:49040/arniture`,  (err) => {
+//   if (err) return console.log('m-lab error')
+//   console.log('m-lab ok')
+// })
+
+mongoose.connect('mongodb://localhost/arniture')
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/users')

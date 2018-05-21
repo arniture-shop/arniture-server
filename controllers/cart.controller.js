@@ -68,26 +68,6 @@ module.exports = {
       })
     })
   },
-  removeItem: function (req, res) {
-    let token = req.headers.token
-    let decoded = jwt.verify(token, process.env.SECRETKEY)
-    Cart.findOne({
-      userId: decoded.id,
-      itemId: req.params.itemId
-    })
-    .then(function (cartList) {
-      cartList.remove()
-      res.status(200).json({
-        message: 'cart list remove succeed'
-      })
-    })
-    .catch(function (err) {
-      res.status(500).json({
-        message: 'fail to remove cart list',
-        err: err
-      })
-    })
-  },
   clear: function (req, res) {
     Cart.remove({_id: req.params._id})
     .then(data => {
