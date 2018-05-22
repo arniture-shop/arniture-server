@@ -35,7 +35,7 @@ module.exports = {
   
         newUser.save(function (err, user) {
           if (err) {
-            res.status(500).json({
+            res.status(400).json({
               message: "fail inserting new user",
               err:err
             })
@@ -64,7 +64,7 @@ module.exports = {
           message: "sign in succeed"
         })
         } else {
-          res.status(400).json({
+          res.status(500).json({
             err:err,
             message:"password is wrong"
           })

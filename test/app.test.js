@@ -1,7 +1,7 @@
 const chai = require('chai')
 const expect = chai.expect
 const chaiHttp = require('chai-http')
-const server = 'http://localhost:3000'
+const server = require('../app')
 
 chai.use(chaiHttp)
 
@@ -25,6 +25,36 @@ describe('Users signup and signin', () => {
       done()
     })
   })
+  it('expect to signup with used email', (done) => {
+    chai.request(server)
+    .post('/users/signup')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      email: 'test@mail.com',
+      password: 'test1234',
+      role: 'user'
+    })
+    .end((err, res) => {
+      expect(res.status).to.equal(400)
+      expect(res.body).to.ownProperty('message').to.equal('email is already used')
+      done()
+    })
+  })
+  it('expect to error signup', (done) => {
+    chai.request(server)
+    .post('/users/signup')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      email: 'test123@mail.com',
+      password: ''
+    })
+    .end((err, res) => {
+      expect(res.status).to.equal(400)
+      expect(res.body).to.ownProperty('message').to.equal('fail inserting new user')
+      expect(res.body).to.ownProperty('err')
+      done()
+    })
+  })
   it('expect to signin user', (done) => {
     chai.request(server)
     .post('/users/signin')
@@ -38,6 +68,35 @@ describe('Users signup and signin', () => {
       expect(res.body).to.ownProperty('message').to.equal('sign in succeed')
       expect(res.body).to.ownProperty('token').to.be.a('string')
       expect(res.body).to.ownProperty('payload').to.be.a('object')
+      done()
+    })
+  })
+  it('expect to error signin user', (done) => {
+    chai.request(server)
+    .post('/users/signin')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      email: 'test@mail.com',
+      password: 'test123'
+    })
+    .end((err, res) => {
+      expect(res.status).to.equal(500)
+      expect(res.body).to.ownProperty('message').to.equal('fail to sign user in')
+      expect(res.body).to.ownProperty('err')
+      done()
+    })
+  })
+  it('expect to error signin user', (done) => {
+    chai.request(server)
+    .post('/users/signin')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      email: 'test1@mail.com',
+      password: 'test123'
+    })
+    .end((err, res) => {
+      expect(res.status).to.equal(400)
+      expect(res.body).to.ownProperty('message').to.equal('email is not found')
       done()
     })
   })
@@ -72,6 +131,20 @@ describe('Items', () => {
       done()
     })
   })
+  it('expect error add item', (done) => {
+    chai.request(server)
+    .post('/items')
+    .send({
+      item_mtl: 'test.mtl,test.jpg',
+      scale: '1,1,1'
+    })
+    .end((err, res) => {
+      expect(res).to.have.status(500)
+      expect(res.body).to.ownProperty('message').to.equal('Error add item')
+      expect(res.body).to.ownProperty('err')
+      done()
+    })
+  })
   it('expect read all item', (done) => {
     chai.request(server)
     .get('/items')
@@ -101,6 +174,16 @@ describe('Items', () => {
         // expect(res.body.data).to.haveOwnProperty('scale')
         done()
       })
+    })
+  })
+  it('expect error read one item', (done) => {
+    chai.request(server)
+    .get('/items/123')
+    .end((err, res) => {
+      expect(res).to.have.status(500)
+      expect(res.body).to.ownProperty('message').to.equal('Item not found')
+      expect(res.body).to.ownProperty('err')
+      done()
     })
   })
   it('expect update item', (done) => {
@@ -133,7 +216,23 @@ describe('Items', () => {
       })
     })
   })
-  
+  it('expect error update item', (done) => {
+    chai.request(server)
+    .put('/items/123')
+    .set('content-type', 'application/x-www-form-urlencoded')
+    .send({
+      name: 'Test update',
+      price: 2000,
+      img: 'Image test update',
+      item_obj: 'testupdate.obj'
+    })
+    .end((er, re) => {
+      expect(re).to.have.status(400)
+      expect(re.body).to.ownProperty('message').to.equal('Update failed')
+      expect(re.body).to.ownProperty('err')
+      done()
+    })
+  })
 })
 
 describe('Cart', () => {
@@ -304,15 +403,6 @@ describe('Cart', () => {
 })
 
 describe('delete user and item', () => {
-  it('expect to remove user', (done) => {
-    chai.request(server)
-    .delete(`/users/test@mail.com`)
-    .end((err, res) => {
-      expect(res).to.have.status(200)
-      expect(res.body).to.ownProperty('message').to.equal('user removed')
-      done()
-    })
-  })
   it('expect to delete item', () => {
     chai.request(server)
     .get('/items')
@@ -323,6 +413,25 @@ describe('delete user and item', () => {
         expect(res).to.have.status(200)
         expect(res.body).to.ownProperty('message').to.equal('Delete success')
       })
+    })
+  })
+  it('expect to error delete item', (done) => {
+    chai.request(server)
+    .delete('/items/123')
+    .end((err, res) => {
+      expect(res).to.have.status(400)
+      expect(res.body).to.ownProperty('message').to.equal('Delete failed')
+      expect(res.body).to.ownProperty('err')
+      done()
+    })
+  })
+  it('expect to remove user', (done) => {
+    chai.request(server)
+    .delete(`/users/test@mail.com`)
+    .end((err, res) => {
+      expect(res).to.have.status(200)
+      expect(res.body).to.ownProperty('message').to.equal('user removed')
+      done()
     })
   })
 })

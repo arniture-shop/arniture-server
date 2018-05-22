@@ -22,7 +22,7 @@ module.exports = {
       })
     })
     .catch(err => {
-      res.status(400).json({
+      res.status(500).json({
         message: 'Error add item',
         err
       })
@@ -46,8 +46,10 @@ module.exports = {
       })
     })
     .catch(err => {
-      message: 'Item not found',
-      err
+      res.status(500).json({
+        message: 'Item not found',
+        err
+      })
     })
   },
   update: function (req, res) {

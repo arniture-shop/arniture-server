@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "nodemon ./bin/www",
-    "test": "mocha"
+    "test": "nyc mocha --exit"
   },
   "dependencies": {
     "axios": "^0.18.0",
@@ -27,5 +27,15 @@
     "coveralls": "^3.0.1",
     "istanbul": "^0.4.5",
     "nyc": "^11.8.0"
+  },
+  "nyc": {
+    "check-coverage": true,
+    "include": [
+      "**/*.js"
+    ],
+    "exclude": [
+      "**/*.test.js"
+    ],
+    "all": true
   }
 }
